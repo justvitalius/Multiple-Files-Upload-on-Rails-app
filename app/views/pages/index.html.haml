@@ -3,31 +3,31 @@
     %h1 jQuery File Upload Demo
   %blockquote
     %p
-      File Upload widget with multiple file selection, drag&drop support, progress bars and preview images for jQuery.
+      Загружаем несколько видео через html5
       %br
-        Supports cross-domain, chunked and resumable file uploads and client-side image resizing.
-        %br
-          Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.
+      Конечно же работает только в современным браузерах, никаких IE
+      %br
+      Во главе любимые Rails 3.2 и Paperclip.
+      Все обслуживает плагин jQuery-File-Upload
   %br
     / The file upload form used as target for the file upload widget
-    %form#fileupload{:action => "http://localhost:3000/uploads", :enctype => "multipart/form-data", :method => "POST"}
-      / The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload
+    = form_for @upload, :html => {:multipart => true, :id => "fileupload"} do |f|
       .row.fileupload-buttonbar
         .span7
           / The fileinput-button span is used to style the file input field as button
           %span.btn.btn-success.fileinput-button
             %i.icon-plus.icon-white
-            %span Add files...
-            %input{:multiple => "", :name => "img[]", :type => "file"}
+            %span Добавить файлы...
+            =f.text_field :img, multiple: "", name: "img[]", type: "file", value: "", id: ""
           %button.btn.btn-primary.start{:type => "submit"}
             %i.icon-upload.icon-white
-            %span Start upload
+            %span Загрузить все
           %button.btn.btn-warning.cancel{:type => "reset"}
             %i.icon-ban-circle.icon-white
-            %span Cancel upload
+            %span Отменить загрузку (жать надо быстро)
           %button.btn.btn-danger.delete{:type => "button"}
             %i.icon-trash.icon-white
-            %span Delete
+            %span Удалить
           %input.toggle{:type => "checkbox"}
         / The global progress information
         .span5.fileupload-progress.fade
@@ -42,146 +42,7 @@
         / The table listing the files available for upload/download
         %table.table.table-striped{:role => "presentation"}
           %tbody.files{"data-target" => "#modal-gallery", "data-toggle" => "modal-gallery"}
-    %br
-      .well
-        %h3 Demo Notes
-        %ul
-          %li
-            The maximum file size for uploads in this demo is
-            %strong 5 MB
-            (default file size is unlimited).
-          %li
-            Only image files (
-            %strong> JPG, GIF, PNG
-            ) are allowed in this demo (by default there is no file type restriction).
-          %li
-            Uploaded files will be deleted automatically after
-            %strong 5 minutes
-            (demo setting).
-          %li
-            You can
-            %strong drag & drop
-            files from your desktop on this webpage with Google Chrome, Mozilla Firefox and Apple Safari.
-          %li
-            Please refer to the
-            %a{:href => "https://github.com/blueimp/jQuery-File-Upload"} project website
-            and
-            %a{:href => "https://github.com/blueimp/jQuery-File-Upload/wiki"} documentation
-            for more information.
-          %li
-            Built with Twitter's
-            %a{:href => "http://twitter.github.com/bootstrap/"} Bootstrap
-            toolkit and Icons from
-            = succeed "." do
-              %a{:href => "http://glyphicons.com/"} Glyphicons
-/ modal-gallery is the modal dialog used for the image gallery
-#modal-gallery.modal.modal-gallery.hide.fade{"data-filter" => ":odd"}
-  .modal-header
-    %a.close{"data-dismiss" => "modal"} ×
-    %h3.modal-title
-  .modal-body
-    .modal-image
-  .modal-footer
-    %a.btn.modal-download{:target => "_blank"}
-      %i.icon-download
-      %span Download
-    %a.btn.btn-success.modal-play.modal-slideshow{"data-slideshow" => "5000"}
-      %i.icon-play.icon-white
-      %span Slideshow
-    %a.btn.btn-info.modal-prev
-      %i.icon-arrow-left.icon-white
-      %span Previous
-    %a.btn.btn-primary.modal-next
-      %span Next
-      %i.icon-arrow-right.icon-white
-/ The template to display files available for upload
-%script#template-upload{:type => "text/x-tmpl"}
-  {% for (var i=0, file; file=o.files[i]; i++) { %}
-  %tr.template-upload.fade
-    %td.preview
-      %span.fade
-    %td.name
-      %span {%=file.name%}
-    %td.size
-      %span {%=o.formatFileSize(file.size)%}
-    {% if (file.error) { %}
-    %td.error{:colspan => "2"}
-      %span.label.label-important {%=locale.fileupload.error%}
-      {%=locale.fileupload.errors[file.error] || file.error%}
-    {% } else if (o.files.valid && !i) { %}
-    %td
-      .progress.progress-success.progress-striped.active{"aria-valuemax" => "100", "aria-valuemin" => "0", "aria-valuenow" => "0", :role => "progressbar"}
-        .bar{:style => "width:0%;"}
-    %td.start
-      {% if (!o.options.autoUpload) { %}
-      %button.btn.btn-primary
-        %i.icon-upload.icon-white
-        %span {%=locale.fileupload.start%}
-      {% } %}
-    {% } else { %}
-    %td{:colspan => "2"}
-    {% } %}
-    %td.cancel
-      {% if (!i) { %}
-      %button.btn.btn-warning
-        %i.icon-ban-circle.icon-white
-        %span {%=locale.fileupload.cancel%}
-      {% } %}
-  {% } %}
-/ The template to display files available for download
-%script#template-download{:type => "text/x-tmpl"}
-  {% for (var i=0, file; file=o.files[i]; i++) { %}
-  %tr.template-download.fade
-    {% if (file.error) { %}
-    %td
-    %td.name
-      %span {%=file.name%}
-    %td.size
-      %span {%=o.formatFileSize(file.size)%}
-    %td.error{:colspan => "2"}
-      %span.label.label-important {%=locale.fileupload.error%}
-      {%=locale.fileupload.errors[file.error] || file.error%}
-    {% } else { %}
-    %td.preview
-      {% if (file.thumbnail_url) { %}
-      %a{:download => "{%=file.name%}", :href => "{%=file.url%}", :rel => "gallery", :title => "{%=file.name%}"}
-        %img{:src => "{%=file.thumbnail_url%}"}/
-      {% } %}
-    %td.name
-      %a{:download => "{%=file.name%}", :href => "{%=file.url%}", :rel => "{%=file.thumbnail_url&&'gallery'%}", :title => "{%=file.name%}"} {%=file.name%}
-    %td.size
-      %span {%=o.formatFileSize(file.size)%}
-    %td{:colspan => "2"}
-    {% } %}
-    %td.delete
-      %button.btn.btn-danger{"data-type" => "{%=file.delete_type%}", "data-url" => "{%=file.delete_url%}"}
-        %i.icon-trash.icon-white
-        %span {%=locale.fileupload.destroy%}
-      %input{:name => "delete", :type => "checkbox", :value => "1"}
-  {% } %}
--#%script{:src => "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"}
--#/ The jQuery UI widget factory, can be omitted if jQuery UI is already included
--#%script{:src => "assets/plugin/vendor/jquery.ui.widget.js"}
--#/ The Templates plugin is included to render the upload/download listings
--#%script{:src => "http://blueimp.github.com/JavaScript-Templates/tmpl.min.js"}
--#/ The Load Image plugin is included for the preview images and image resizing functionality
--#%script{:src => "http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js"}
--#/ The Canvas to Blob plugin is included for image resizing functionality
--#%script{:src => "http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js"}
-/ Bootstrap JS and Bootstrap Image Gallery are not required, but included for the demo
--#%script{:src => "http://blueimp.github.com/cdn/js/bootstrap.min.js"}
--#%script{:src => "http://blueimp.github.com/Bootstrap-Image-Gallery/js/bootstrap-image-gallery.min.js"}
-/ The Iframe Transport is required for browsers without support for XHR file uploads
--#%script{:src => "assets/plugin/jquery.iframe-transport.js"}
--#/ The basic File Upload plugin
--#%script{:src => "assets/plugin/jquery.fileupload.js"}
--#/ The File Upload file processing plugin
--#%script{:src => "assets/plugin/jquery.fileupload-fp.js"}
--#/ The File Upload user interface plugin
--#%script{:src => "assets/plugin/jquery.fileupload-ui.js"}
--#/ The localization script
--#%script{:src => "assets/plugin/locale.js"}
--#/ The main application script
--#%script{:src => "assets/main.js"}
-/ The XDomainRequest Transport is included for cross-domain file deletion for IE8+
-/[if gte IE 8] <script src="js/cors/jquery.xdr-transport.js"></script>
+
+
+= render :partial => "js_tmpl/available_to_download.tmpl"
+= render :partial => "js_tmpl/download_available.tmpl"
