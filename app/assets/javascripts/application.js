@@ -12,7 +12,7 @@
 //
 //= require jquery
 //= require twitter/bootstrap
-// require jquery-fileupload
+//= require jquery-fileupload
 //= require_self
 
 $(function () {
