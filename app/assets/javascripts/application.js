@@ -13,15 +13,16 @@
 //= require jquery
 //= require twitter/bootstrap
 //= require jquery-fileupload
+//= require_tree
 //= require_self
 
-$(function () {
-    'use strict';
-    // Initialize the jQuery File Upload widget:
-    $('#fileupload').fileupload();
-
-
-
-});
+//$(function () {
+//    'use strict';
+//    // Initialize the jQuery File Upload widget:
+//    $('#fileupload').fileupload();
+//
+//
+//
+//});
 
 

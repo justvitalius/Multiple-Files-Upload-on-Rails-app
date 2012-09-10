@@ -10,19 +10,26 @@
         <td class="preview">{% if (file.thumbnail_url) { %}
             <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
       {% } %}</td>
-            <td class="name">
-                <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+        <td class="name">
+            <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+        </td>
+        <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+        <td colspan="2"></td>
+{% } %}
+        <!--кнопка для вставки картинки в текст-->
+        <td class="insert">
+            <button href="#" class="btn btn-success" data-url="{%=file.url%}">
+                <i class="icon-edit icon-white"></i>
+                <span>вставить изображение</span>
+            </button>
+        </td>
+        <td class="delete">
+            <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+                <i class="icon-trash icon-white"></i>
+                <span>{%=locale.fileupload.destroy%}</span>
+            </button>
+            <input type="checkbox" name="delete" value="1">
             </td>
-            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-            <td colspan="2"></td>
-    {% } %}
-            <td class="delete">
-                <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
-                    <i class="icon-trash icon-white"></i>
-                    <span>{%=locale.fileupload.destroy%}</span>
-                </button>
-                <input type="checkbox" name="delete" value="1">
-                </td>
-            </tr>
+        </tr>
   {% } %}
-        </script>
+</script>
